@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://de5w0bnvhc3wn"]
+
+[ext_resource type="Script" uid="uid://ce11pxx13ci0n" path="res://scripts/pre_menu.gd" id="1_4aqw2"]
+
+[node name="PreMenu" type="Node2D" unique_id=1792343012]
+script = ExtResource("1_4aqw2")
+
+[node name="Label" type="Label" parent="." unique_id=1437175322]
+offset_right = 339.13043
+offset_bottom = 104.0
+text = "Loading..."

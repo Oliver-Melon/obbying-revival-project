@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cls01o1dl5i25"]
 
-[ext_resource type="Script" uid="uid://o6yme87rmk62" path="res://GUI/Sensitivity.gd" id="1_lqlgg"]
+[ext_resource type="Script" uid="uid://o6yme87rmk62" path="res://GUI/Scripts/Sensitivity.gd" id="1_lqlgg"]
 
 [node name="HSlider" type="HSlider" unique_id=1186367559]
 modulate = Color(0.6683092, 0.9999998, 0.7302879, 1)

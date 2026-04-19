@@ -11,23 +11,37 @@ config_version=5
 [application]
 
 config/name="Obbying Revival Project"
-run/main_scene="uid://d1c2eswg8w2pk"
+run/main_scene="uid://de5w0bnvhc3wn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
+run/max_fps=60
 config/icon="uid://bff45kdw0wpbe"
 config/show_image=true
+
+[autoload]
+
+GameManager="*uid://cte5656lvloub"
 
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
 window/size/mode=1
+window/vsync/vsync_mode=0
+
+[file_customization]
+
+folder_colors={
+"res://GUI/": "green",
+"res://assets/": "purple",
+"res://character/": "blue",
+"res://scenes/": "pink",
+"res://scripts/": "yellow"
+}
 
 [global_group]
 
 climbable="climbable"
-kills=""
-ouch=""
-instakills=""
+DamageDealer=""
 
 [input]
 

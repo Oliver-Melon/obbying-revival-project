@@ -33,9 +33,6 @@ var Health := 100.0 :
 		update_health_bar()
 		Health = clamp(new,0,MaxHealth)
 
-var kills := 5
-var ouch := 20
-var instakills := MaxHealth
 @export var regen_rate := 1.0  # HP per second
 @export var regen_delay := 2.0  # seconds after taking damage
 var regen_timer := 0.0
@@ -128,6 +125,8 @@ func update_health_bar():
 		HealthBar.value = (Health / MaxHealth) * 100
 
 func reset():
+	await get_tree().process_frame
+	ProjectSettings.set_setting("application/run/max_fps",60)
 	position = spawn.position
 	Health = MaxHealth
 
@@ -278,5 +277,5 @@ func _process(delta: float) -> void:
 
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
-	if body.is_in_group("damage_dealers"):
+	if body.is_in_group("DamageDealer"):
 		self.Health -= body.damage
