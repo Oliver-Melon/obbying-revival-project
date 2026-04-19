@@ -13,7 +13,8 @@ config_version=5
 config/name="Obbying Revival Project"
 run/main_scene="uid://d1c2eswg8w2pk"
 config/features=PackedStringArray("4.6", "GL Compatibility")
-config/icon="res://icon.svg"
+config/icon="uid://bff45kdw0wpbe"
+config/show_image=true
 
 [display]
 
@@ -74,7 +75,7 @@ shift_lock={
 [physics]
 
 3d/physics_engine="Jolt Physics"
-3d/default_gravity=22.0
+3d/default_gravity=24.0
 
 [rendering]
 

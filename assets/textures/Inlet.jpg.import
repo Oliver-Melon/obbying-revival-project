@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dmqsubae2di2r"
-path.s3tc="res://.godot/imported/ouch.png-98566a58e8f3929e2ece6618242bec0d.s3tc.ctex"
+uid="uid://t5hgotry1dqp"
+path.s3tc="res://.godot/imported/Inlet.jpg-d34f19813386e223c39a9e4d86e25a29.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/ouch.png"
-dest_files=["res://.godot/imported/ouch.png-98566a58e8f3929e2ece6618242bec0d.s3tc.ctex"]
+source_file="res://assets/textures/Inlet.jpg"
+dest_files=["res://.godot/imported/Inlet.jpg-d34f19813386e223c39a9e4d86e25a29.s3tc.ctex"]
 
 [params]
 

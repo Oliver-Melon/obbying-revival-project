@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://kikn8woerj17"]
 
-[ext_resource type="Texture2D" uid="uid://06yyr0vopjuh" path="res://assets/instakills.png" id="1_vdo1d"]
+[ext_resource type="Texture2D" uid="uid://06yyr0vopjuh" path="res://assets/textures/instakills.png" id="1_vdo1d"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_fpvxl"]
 

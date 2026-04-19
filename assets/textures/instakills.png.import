@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b0s1otkehsr8g"
-path.s3tc="res://.godot/imported/Stud.jpg-19f6ea6ca68224a54c5d6251cf5cb9d8.s3tc.ctex"
+uid="uid://06yyr0vopjuh"
+path.s3tc="res://.godot/imported/instakills.png-73c85b599b52ca148719bf415b9142dc.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/Stud.jpg"
-dest_files=["res://.godot/imported/Stud.jpg-19f6ea6ca68224a54c5d6251cf5cb9d8.s3tc.ctex"]
+source_file="res://assets/textures/instakills.png"
+dest_files=["res://.godot/imported/instakills.png-73c85b599b52ca148719bf415b9142dc.s3tc.ctex"]
 
 [params]
 

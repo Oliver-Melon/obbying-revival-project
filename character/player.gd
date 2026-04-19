@@ -4,7 +4,7 @@ const SPEED = 4
 const JUMP_VELOCITY = 7.5
 
 #coyote time shi
-@export var coyote_time := 0.1
+@export var coyote_time := 0.125
 var coyote_timer := 0.0
 
 var truss_timer := 999.0
@@ -29,9 +29,9 @@ var took_damage := false
 @export var climb_speed := 3.0
 @export var stick_force := 2.0
 @export var jump_off_force := 40
-@export var jump_up_force := 5.0
+@export var jump_up_force := 3.0
 var just_jumped_off := false
-
+@export var shiftlockLogo: TextureRect
 @onready var flickRay = $flickRay
 @onready var flickRayBack = $flickRay2
 @onready var flickRayRight = $flickRay3
@@ -81,6 +81,7 @@ func reset():
 	position = spawn.position
 	Health = MaxHealth
 	update_health_bar()
+
 
 
 func _physics_process(delta: float) -> void:

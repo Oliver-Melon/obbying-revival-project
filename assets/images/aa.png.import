@@ -2,21 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://n57bufw4xuqm"
-path.bptc="res://.godot/imported/citrus_orchard_road_puresky_4k.exr-be896ba27ea2524bb5fa676a44c8a2a8.bptc.ctex"
+uid="uid://bff45kdw0wpbe"
+path="res://.godot/imported/aa.png-782114e676a0dc0b6b8b3c6ffa972bcd.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/citrus_orchard_road_puresky_4k.exr"
-dest_files=["res://.godot/imported/citrus_orchard_road_puresky_4k.exr-be896ba27ea2524bb5fa676a44c8a2a8.bptc.ctex"]
+source_file="res://assets/images/aa.png"
+dest_files=["res://.godot/imported/aa.png-782114e676a0dc0b6b8b3c6ffa972bcd.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -24,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -38,4 +37,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1

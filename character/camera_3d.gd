@@ -4,14 +4,12 @@ extends Camera3D
 @export var distance := 10.0
 @export var min_distance := 2
 @export var max_distance := 20.0
-
 @export var zoom_speed := .4
 @export var smooth_speed := 5
 
 var yaw := 0.0
 var pitch := 0.0
 var rotating := false
-
 
 var target_distance := 10.0
 
@@ -21,23 +19,29 @@ func _ready():
 func _input(event):
 	if Input.is_action_just_pressed("shift_lock"):
 		target.shiftlock = !target.shiftlock
-
+		target.shiftlockLogo.visible = !target.shiftlockLogo.visible
 		if target.shiftlock:
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		else:
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 			rotating = false
+	if not target.shiftlock:
+		rotating = Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
+		Input.set_mouse_mode(
+			Input.MOUSE_MODE_CAPTURED if rotating else Input.MOUSE_MODE_VISIBLE
+		)
+	if Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_UP):
+		target_distance -= zoom_speed
+	elif Input.is_mouse_button_pressed(MOUSE_BUTTON_WHEEL_DOWN):
+		target_distance += zoom_speed
 
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_RIGHT and not target.shiftlock:
-			rotating = event.pressed
-			Input.set_mouse_mode(
-				Input.MOUSE_MODE_CAPTURED if rotating else Input.MOUSE_MODE_VISIBLE
-			)
-		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-			target_distance -= zoom_speed
-		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			target_distance += zoom_speed
+	target_distance = clamp(target_distance, min_distance, max_distance)
+
+	if not target.shiftlock:
+		rotating = Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
+		Input.set_mouse_mode(
+			Input.MOUSE_MODE_CAPTURED if rotating else Input.MOUSE_MODE_VISIBLE
+		)
 
 		target_distance = clamp(target_distance, min_distance, max_distance)
 

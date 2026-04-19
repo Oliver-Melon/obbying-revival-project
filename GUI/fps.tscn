@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://bhgjl8nsom23c"]
+
+[ext_resource type="Script" uid="uid://buu7pudvc4prr" path="res://GUI/fps.gd" id="1_qrbhb"]
+[ext_resource type="FontFile" uid="uid://bb74yqfgngijg" path="res://assets/fonts/AlteHaasGroteskBold.ttf" id="2_yal45"]
+
+[sub_resource type="Theme" id="Theme_mlofp"]
+default_font = ExtResource("2_yal45")
+default_font_size = 15
+
+[node name="Label" type="Label" unique_id=48497232]
+offset_right = 40.0
+offset_bottom = 23.0
+theme = SubResource("Theme_mlofp")
+text = "FPS: 67 // 1203897129803217"
+script = ExtResource("1_qrbhb")
+
+[node name="Fps" type="Control" parent="." unique_id=174923971]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

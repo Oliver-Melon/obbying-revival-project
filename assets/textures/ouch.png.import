@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bx4e21j3lv85r"
-path.s3tc="res://.godot/imported/kills.png-d0cdb0116f8c8b5db8e1d12c906b7eb1.s3tc.ctex"
+uid="uid://dmqsubae2di2r"
+path.s3tc="res://.godot/imported/ouch.png-6251bdd9ee49c1bec3704d0c4fe45462.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/kills.png"
-dest_files=["res://.godot/imported/kills.png-d0cdb0116f8c8b5db8e1d12c906b7eb1.s3tc.ctex"]
+source_file="res://assets/textures/ouch.png"
+dest_files=["res://.godot/imported/ouch.png-6251bdd9ee49c1bec3704d0c4fe45462.s3tc.ctex"]
 
 [params]
 

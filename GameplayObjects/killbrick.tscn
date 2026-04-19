@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bineh0rhy1mhl"]
 
-[ext_resource type="Texture2D" uid="uid://bx4e21j3lv85r" path="res://assets/kills.png" id="1_ihou5"]
+[ext_resource type="Texture2D" uid="uid://bx4e21j3lv85r" path="res://assets/textures/kills.png" id="1_ihou5"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_fpvxl"]
 
