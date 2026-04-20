@@ -39,7 +39,6 @@ var regen_timer := 0.0
 var took_damage := false
 
 # camera and trusses etc
-@export var sensitivity := 0.005
 @export var climb_speed := 3.0
 @export var stick_force := 2.0
 @export var jump_off_force := 40
@@ -126,7 +125,6 @@ func update_health_bar():
 
 func reset():
 	await get_tree().process_frame
-	ProjectSettings.set_setting("application/run/max_fps",60)
 	position = spawn.position
 	Health = MaxHealth
 
