@@ -2,13 +2,23 @@
 
 [ext_resource type="PackedScene" uid="uid://bqn7xr4afyk5h" path="res://assets/models/Character.glb" id="1_2xl0c"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_2xl0c"]
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_4iwof"]
+points = PackedVector3Array(-0.52889997, -0.5288999, -0.5288999, 0.52889514, 0.52889997, 0.52889997, 0.52889514, 0.52889997, -0.52889997, 0.52889514, -0.52889997, 0.52889997, -0.52889997, 0.5288999, 0.5288999, 0.52889514, -0.52889997, -0.52889997, -0.52889997, 0.5288999, -0.5288999, -0.52889997, -0.5288999, 0.5288999)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_58doc"]
+points = PackedVector3Array(-0.52889997, -0.5288999, -0.5288999, 0.52889514, 0.52889997, 0.52889997, 0.52889514, 0.52889997, -0.52889997, 0.52889514, -0.52889997, 0.52889997, -0.52889997, 0.5288999, 0.5288999, 0.52889514, -0.52889997, -0.52889997, -0.52889997, 0.5288999, -0.5288999, -0.52889997, -0.5288999, 0.5288999)
 
 [node name="Character" unique_id=1573106910 instance=ExtResource("1_2xl0c")]
 
-[node name="StaticBody3D" type="StaticBody3D" parent="ObbyAvatar/Skeleton3D/torso" parent_id_path=PackedInt32Array(1776741050) index="1" unique_id=1450331639]
+[node name="StaticBody3D" type="StaticBody3D" parent="ObbyAvatar/Skeleton3D/torso" parent_id_path=PackedInt32Array(944131172) index="1" unique_id=1450331639]
 transform = Transform3D(1, 0, -5.684342e-14, 0, 1, 1.6148785e-15, 5.684342e-14, -1.9378386e-15, 1, 0, 0, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="ObbyAvatar/Skeleton3D/torso/StaticBody3D" index="0" unique_id=763086111]
-transform = Transform3D(1, 0, 2.842171e-14, 0, 1, -1.0496568e-15, -2.842171e-14, -1.6148853e-16, 1, 0, 0, 0)
-shape = SubResource("BoxShape3D_2xl0c")
+[node name="TorsoCollision" type="CollisionShape3D" parent="ObbyAvatar/Skeleton3D/torso/StaticBody3D" index="0" unique_id=139920950]
+transform = Transform3D(1.5828364e-07, -3.8250494e-08, -0.25211108, -7.2858195e-09, 0.5042222, -1.9125247e-08, 0.50422215, 7.2858324e-09, 7.914182e-08, -0.00196667, 0.20394072, 3.8292525e-10)
+shape = SubResource("ConvexPolygonShape3D_4iwof")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="ObbyAvatar/Skeleton3D/head" parent_id_path=PackedInt32Array(1485498114) index="1" unique_id=250809011]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ObbyAvatar/Skeleton3D/head/StaticBody3D" index="0" unique_id=605826447]
+transform = Transform3D(0.25211108, 3.6429102e-09, 2.0759853e-23, -3.6429102e-09, 0.25211108, -4.2920138e-15, -8.2777844e-23, 4.2920138e-15, 0.25211108, 0, 0.12706679, 0.0019666653)
+shape = SubResource("ConvexPolygonShape3D_58doc")

@@ -45,17 +45,14 @@ var took_damage := false
 @export var jump_up_force := 3.0
 var just_jumped_off := false
 @export var shiftlockLogo: TextureRect
-@onready var flickRay = $flickRay
-@onready var flickRayBack = $flickRay2
-@onready var flickRayRight = $flickRay3
-@onready var flickRayLeft = $flickRay4
+@export var grounded: bool
 @onready var cam = $Camera3D
 @onready var ray = $RayCast3D
 @onready var brickCollision = $Area3D
 @onready var player = $Character
 @onready var playerAnims = $Character/AnimationPlayer
 @export var HealthBar: ProgressBar
-
+@onready var LegCasts = $LegCasts.get_children()
 @export var voidDepth := 50.0
 @export var follow_camera := false 
 var last_state = -1
@@ -101,7 +98,7 @@ func update_anim():
 func update_state():
 	if is_climbing:
 		State = states.Climbing
-	elif not is_on_floor():
+	elif not on_ground():
 		if velocity.y > 0:
 			State = states.Jumping
 		else:
@@ -110,13 +107,18 @@ func update_state():
 		State = states.Walking
 	else:
 		State = states.Idle
-		
+
+func on_ground() -> bool:
+	for legcast: RayCast3D in LegCasts:
+		if legcast.is_colliding():
+			print("yea ur colliding idiot")
+			return true
+	print("stupid ass cant even collide in this economy")
+	return false
+
+
 func _ready() -> void:
 	reset()
-
-
-func is_leg_near_ground() -> bool:
-	return (flickRay.is_colliding() or flickRayBack.is_colliding() or flickRayRight.is_colliding() or flickRayLeft.is_colliding())
 
 
 func update_health_bar():
@@ -129,6 +131,7 @@ func reset():
 	GameManager.CharacterAdded.emit(self)
 
 func _physics_process(delta: float) -> void:
+	on_ground()
 	# timers
 	truss_timer += delta
 	jump_lock = max(jump_lock - delta, 0.0)
@@ -144,7 +147,7 @@ func _physics_process(delta: float) -> void:
 			Health = min(Health, MaxHealth)
 
 	# climbing
-	if ray.is_colliding() and not is_on_floor():
+	if ray.is_colliding() and not on_ground():
 		var collider = ray.get_collider()
 
 		if collider.is_in_group("climbable"):
@@ -164,19 +167,12 @@ func _physics_process(delta: float) -> void:
 		climb_normal = Vector3.ZERO
 
 	# gravity
-	if not is_on_floor() and not is_climbing:
+	if not on_ground() and not is_climbing:
 		velocity += get_gravity() * delta
-
-	# truss coyote logic
-	if truss_timer < 0.1 and not truss_used:
-		if is_leg_near_ground():
-			truss_used = true
-			coyote_timer = coyote_time
-		else:
-			coyote_timer = 0
-
+	else:
+		velocity.y = 0
 	# ground coyote
-	if is_on_floor():
+	if on_ground():
 		coyote_timer = coyote_time
 	else:
 		coyote_timer = max(coyote_timer - delta, 0.0)
