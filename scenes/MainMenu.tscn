@@ -53,7 +53,7 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7la6k"]
 shader = SubResource("Shader_8a8k8")
 shader_parameter/star_density = 0.5
-shader_parameter/elapsed_time = 180.11173661109626
+shader_parameter/elapsed_time = 1017.732016278498
 shader_parameter/direction = Vector2(-1, 0)
 
 [sub_resource type="GDScript" id="GDScript_ucygd"]
@@ -80,22 +80,11 @@ position = Vector2(-303.75, -219)
 scale = Vector2(1.5, 1.5)
 texture = ExtResource("3_mipys")
 
-[node name="Play" type="Button" parent="Main" unique_id=1896613640]
-offset_left = -578.0
-offset_top = -82.0
-offset_right = -409.0
-offset_bottom = 22.0
-theme = ExtResource("4_l72w3")
-theme_override_fonts/font = ExtResource("2_0ykhv")
-theme_override_font_sizes/font_size = 80
-text = "Play"
-alignment = 0
-
 [node name="Settings" type="Button" parent="Main" unique_id=221492115]
 offset_left = -578.0
-offset_top = 22.0
-offset_right = -409.0
-offset_bottom = 126.0
+offset_top = 36.0
+offset_right = -264.0
+offset_bottom = 140.0
 theme = ExtResource("4_l72w3")
 theme_override_fonts/font = ExtResource("2_0ykhv")
 theme_override_font_sizes/font_size = 80
@@ -104,14 +93,26 @@ alignment = 0
 
 [node name="Credits" type="Button" parent="Main" unique_id=395185412]
 offset_left = -578.0
-offset_top = 126.0
-offset_right = -264.0
-offset_bottom = 230.0
+offset_top = 158.0
+offset_right = -302.0
+offset_bottom = 262.0
 theme = ExtResource("4_l72w3")
 theme_override_fonts/font = ExtResource("2_0ykhv")
 theme_override_font_sizes/font_size = 80
 text = "Credits
 "
+alignment = 0
+
+[node name="Play" type="Button" parent="Main" unique_id=1896613640]
+z_as_relative = false
+offset_left = -578.0
+offset_top = -82.0
+offset_right = -409.0
+offset_bottom = 22.0
+theme = ExtResource("4_l72w3")
+theme_override_fonts/font = ExtResource("2_0ykhv")
+theme_override_font_sizes/font_size = 80
+text = "Play"
 alignment = 0
 
 [node name="BG" type="Control" parent="." unique_id=500703345]
@@ -132,16 +133,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -1280.0
-offset_top = -720.0
-offset_right = 11520.0
-offset_bottom = 6480.0
+offset_left = -1261.0
+offset_top = -706.0
+offset_right = 11539.0
+offset_bottom = 6494.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
 script = SubResource("GDScript_ucygd")
-elapsed_time = 180.11173661109626
+elapsed_time = 1017.732016278498
 
 [node name="Settings" type="Node2D" parent="." unique_id=132079008]
 position = Vector2(1300, 0)
@@ -174,6 +175,6 @@ offset_left = 44.0
 offset_right = 528.8485
 max_value = 80.0
 
-[connection signal="pressed" from="Main/Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Main/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="Main/Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Settings/Back" to="." method="_on_return_to_main_pressed"]
