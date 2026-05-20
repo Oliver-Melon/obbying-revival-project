@@ -69,7 +69,7 @@ func _input(event):
 			pitch = clamp(pitch, -1.5, 1.5)
 
 func _process(delta):
-	offset = Vector3(.35,0,0) if GameManager.shiftlocked else Vector3.ZERO
+	offset = Vector3(1.5,0,0) if GameManager.shiftlocked else Vector3.ZERO
 	if target == null:
 		return
 	if not snapping:

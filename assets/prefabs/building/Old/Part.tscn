@@ -1,20 +1,28 @@
 [gd_scene format=3 uid="uid://dsern6kcs1k5t"]
 
-[ext_resource type="Material" uid="uid://bhjjorrv2iufc" path="res://assets/resources/textures/StudTexture.tres" id="1_hhwbl"]
+[ext_resource type="Shader" uid="uid://b85tmyn414mvx" path="res://assets/resources/shaders/TextureRepeating.gdshader" id="1_hhwbl"]
+[ext_resource type="Texture2D" uid="uid://b0s1otkehsr8g" path="res://assets/images/textures/Stud.jpg" id="2_wljxp"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_fpvxl"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wljxp"]
+render_priority = 0
+shader = ExtResource("1_hhwbl")
+shader_parameter/base_color = Color(0.70165414, 0, 0.3011577, 1)
+shader_parameter/albedo_texture = ExtResource("2_wljxp")
+shader_parameter/tiling_scale = Vector2(0.25, 0.25)
+shader_parameter/sharpness = 10.000000475
+shader_parameter/transparency = 0.0
+
 [sub_resource type="BoxMesh" id="BoxMesh_iuq8f"]
-material = ExtResource("1_hhwbl")
+material = SubResource("ShaderMaterial_wljxp")
 
 [node name="Part" type="RigidBody3D" unique_id=1081425028]
 freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1030342702]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, 0.5)
 shape = SubResource("BoxShape3D_fpvxl")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1760716609]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, 0.5)
 cast_shadow = 0
 mesh = SubResource("BoxMesh_iuq8f")

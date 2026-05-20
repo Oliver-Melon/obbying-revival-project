@@ -1,7 +1,7 @@
 extends CharacterBody3D
 #walkspeed and jump height
-const SPEED = 10
-const JUMP_VELOCITY = 16
+const SPEED = 16
+const JUMP_VELOCITY = 25
 
 #coyote time shi
 @export var coyote_time := 0.125
@@ -49,7 +49,7 @@ var just_jumped_off := false
 var rotation_locked:bool :
 	get():
 		return cam.mode == cam.CameraMode.FIRSTPERSON or GameManager.shiftlocked
-@export var voidDepth := 50.0
+@export var voidDepth := 300.0
 var last_state = -1
 var is_climbing := false
 var climb_normal := Vector3.ZERO
@@ -130,7 +130,11 @@ func add_Health(amount: float):
 
 
 func reset():
-	global_position = spawn.global_position
+	if not spawn:
+		global_position = Vector3(0,0,0)
+	else:
+		global_position = spawn.global_position
+
 	Health = MaxHealth
 	update_health_bar()
 

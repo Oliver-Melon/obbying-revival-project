@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://ct0p00aubml1x"]
 
 [ext_resource type="Texture2D" uid="uid://n57bufw4xuqm" path="res://assets/skyboxes/citrus_orchard_road_puresky_4k.exr" id="1_esb7u"]
+[ext_resource type="Script" uid="uid://b07seoxhluvhp" path="res://customlevelload.gd" id="1_o3jt7"]
 [ext_resource type="PackedScene" uid="uid://b35nds8m0c77l" path="res://assets/prefabs/UI/shiftlockIcon.tscn" id="2_o1hpr"]
 [ext_resource type="PackedScene" uid="uid://21fflrxp85y2" path="res://assets/prefabs/UI/Health.tscn" id="3_j68um"]
 [ext_resource type="PackedScene" uid="uid://bhgjl8nsom23c" path="res://assets/prefabs/UI/fps.tscn" id="4_wj2ro"]
-[ext_resource type="PackedScene" uid="uid://dsdlq7h2hl07f" path="res://assets/prefabs/building/Old/spawnLocation.tscn" id="8_lv2ji"]
 [ext_resource type="PackedScene" uid="uid://r7idkhhne3c0" path="res://assets/prefabs/UI/esc_menu.tscn" id="11_bdh7s"]
 [ext_resource type="PackedScene" uid="uid://fuehl670w3lw" path="res://assets/prefabs/UI/Timer.tscn" id="12_fgt82"]
 [ext_resource type="PackedScene" uid="uid://b8q02e5g57tx4" path="res://assets/character/player.tscn" id="13_ye4bg"]
@@ -20,6 +20,7 @@ background_mode = 2
 sky = SubResource("Sky_f2txt")
 
 [node name="Node3D" type="Node3D" unique_id=489380727]
+script = ExtResource("1_o3jt7")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1117970329]
 environment = SubResource("Environment_1ainy")
@@ -43,7 +44,4 @@ mouse_filter = 2
 [node name="Player" parent="." unique_id=1574667455 node_paths=PackedStringArray("shiftlockLogo", "HealthBar", "spawn") instance=ExtResource("13_ye4bg")]
 shiftlockLogo = NodePath("../ShiftlockIcon")
 HealthBar = NodePath("../Health")
-spawn = NodePath("../SpawnLocation")
-
-[node name="SpawnLocation" parent="." unique_id=860145157 instance=ExtResource("8_lv2ji")]
-transform = Transform3D(6.666, 0, 0, 0, 1.6665, 0, 0, 0, 6.666, 0, -5, 0)
+spawn = NodePath("")

@@ -1,11 +1,10 @@
 extends Node
 
 @onready var window = get_window()
-
 @export var data:PlayerData = PlayerData.new()
 signal DataLoaded
 signal CharacterAdded(Player)
-
+@export var currentLevel:String
 @export var Camera:CamStuff
 @export var shiftlocked:bool = false
 
@@ -15,30 +14,12 @@ func ensure_levels_folder(): # makes sure that levels exists lol
 	if not dir.dir_exists("levels"):
 		dir.make_dir("levels")
 
-func load_all_levels():
-	var levels = []
-	var dir = DirAccess.open("user://levels")
-	
-	if dir == null:
-		print("no levels folder gng")
-		return levels
-	
-	dir.list_dir_begin()
-	var file = dir.get_next()
-	
-	while file != "":
-		if file.ends_with(".json"):
-			levels.append("user://levels/" + file)
-		file = dir.get_next()
-	
-	dir.list_dir_end()
-	return levels
-
 func _ready():
 	# Window + Mouse Setup
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	get_window().mode = Window.MODE_WINDOWED
 	ensure_levels_folder()
+
 	# Loading playerdata
 	if FileAccess.file_exists("user://data.tres"):
 		data = ResourceLoader.load("user://data.tres")

@@ -53,7 +53,7 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7la6k"]
 shader = SubResource("Shader_8a8k8")
 shader_parameter/star_density = 0.5
-shader_parameter/elapsed_time = 1059.621318500685
+shader_parameter/elapsed_time = 2985.037563254601
 shader_parameter/direction = Vector2(-1, 0)
 
 [sub_resource type="GDScript" id="GDScript_ucygd"]
@@ -115,6 +115,20 @@ theme_override_font_sizes/font_size = 80
 text = "Play"
 alignment = 0
 
+[node name="Panel" type="Panel" parent="Main" unique_id=1075196788]
+offset_top = -143.0
+offset_right = 525.0
+offset_bottom = 327.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Main/Panel" unique_id=714695751]
+layout_mode = 0
+offset_right = 525.0
+offset_bottom = 470.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Main/Panel/ScrollContainer" unique_id=680865465 groups=["level_list"]]
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="BG" type="Control" parent="." unique_id=500703345]
 layout_mode = 3
 anchors_preset = 0
@@ -142,7 +156,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
 script = SubResource("GDScript_ucygd")
-elapsed_time = 1059.621318500685
+elapsed_time = 2985.037563254601
 
 [node name="Settings" type="Node2D" parent="." unique_id=132079008]
 position = Vector2(1300, 0)
