@@ -1,9 +1,10 @@
 extends CharacterBody3D
-#walkspeed and jump height
-const SPEED = 16
-const JUMP_VELOCITY = 25
 
-#coyote time shi
+# walkspeed and jump height
+const SPEED = 14
+const JUMP_VELOCITY = 45
+
+# coyote time shi
 @export var coyote_time := 0.125
 var coyote_timer := 0.0
 
@@ -29,30 +30,64 @@ var took_damage := false
 
 # camera and trusses etc
 @export var sensitivity := 0.005
-@export var climb_speed := 4.0
+@export var climb_speed := 10.0
 @export var stick_force := 2.0
-@export var jump_off_force := 600
-@export var jump_up_force := 3.0
+
+@export var jump_off_force := 15.0 
+@export var jump_up_force := 1.1
+var knockback_timer := 0.0
+
 var just_jumped_off := false
 @export var shiftlockLogo: TextureRect
 @onready var flickRay = $flickRay
 @onready var flickRayBack = $flickRay2
 @onready var flickRayRight = $flickRay3
 @onready var flickRayLeft = $flickRay4
-@onready var cam = $Camera3D
+@onready var cam: CamStuff = $Camera3D
 @onready var ray = $RayCast3D
 @onready var brickCollision = $Area3D
 @onready var player = $Character
 @onready var playerAnims = $Character/AnimationPlayer
+@export var timer: Control
 @export var HealthBar: ProgressBar
 @export var spawn: Node3D
-var rotation_locked:bool :
+
+var rotation_locked: bool :
 	get():
 		return cam.mode == cam.CameraMode.FIRSTPERSON or GameManager.shiftlocked
 @export var voidDepth := 300.0
 var last_state = -1
 var is_climbing := false
 var climb_normal := Vector3.ZERO
+
+func set_char_transparency(alpha: float):
+	var charNode = $Character
+	if not charNode:
+		print("char not found :(")
+		return
+		
+	_apply_transparency_recursive(charNode, alpha)
+
+func _apply_transparency_recursive(node: Node, alpha: float):
+	if node is MeshInstance3D:
+		var material = node.material_override
+		if not material or not (material is StandardMaterial3D):
+			if node.get_active_material(0) is StandardMaterial3D:
+				material = node.get_active_material(0).duplicate()
+			else:
+				material = StandardMaterial3D.new()
+			
+			node.material_override = material
+		
+		if alpha >= 1.0:
+			material.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+		else:
+			material.transparency = BaseMaterial3D.Transparency.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
+		
+		material.albedo_color.a = alpha
+	
+	for child in node.get_children():
+		_apply_transparency_recursive(child, alpha)
 
 func set_climb_anim(pause: bool, dir: String):
 	if pause:
@@ -90,6 +125,7 @@ func update_anim():
 			playerAnims.speed_scale = 1.0
 
 	last_state = State
+
 func update_state():
 	if is_climbing:
 		State = states.Climbing
@@ -102,18 +138,16 @@ func update_state():
 		State = states.Walking
 	else:
 		State = states.Idle
+
 func _ready() -> void:
 	reset()
-
 
 func is_leg_near_ground() -> bool:
 	return (flickRay.is_colliding() or flickRayBack.is_colliding() or flickRayRight.is_colliding() or flickRayLeft.is_colliding())
 
-
 func update_health_bar():
 	if HealthBar:
 		HealthBar.value = (Health / MaxHealth) * 100
-
 
 func remove_Health(amount: float):
 	if Health > 0:
@@ -122,29 +156,33 @@ func remove_Health(amount: float):
 		regen_timer = 0.0
 		took_damage = true
 
-
 func add_Health(amount: float):
 	if Health < MaxHealth:
 		Health = min(MaxHealth, Health + amount)
 		update_health_bar()
-
 
 func reset():
 	if not spawn:
 		global_position = Vector3(0,0,0)
 	else:
 		global_position = spawn.global_position
-
+	timer.get_node("Panel").resetTime()
 	Health = MaxHealth
 	update_health_bar()
-
+	is_climbing = false
+	climb_normal = Vector3.ZERO
+	knockback_timer = 0.0
 
 func _physics_process(delta: float) -> void:
 	# timers
 	truss_timer += delta
 	jump_lock = max(jump_lock - delta, 0.0)
-
-	# regen
+	if cam.target_distance < 5:
+		set_char_transparency(0.5)
+	else:
+		set_char_transparency(1.0)
+		
+	# health regen
 	if Health < MaxHealth:
 		if took_damage:
 			regen_timer += delta
@@ -155,25 +193,27 @@ func _physics_process(delta: float) -> void:
 			Health = min(Health, MaxHealth)
 			update_health_bar()
 
-	# climbing
-	if ray.is_colliding() and not is_on_floor():
+	if ray.is_colliding() and jump_lock <= 0.0:
 		var collider = ray.get_collider()
 
 		if collider.is_in_group("climbable"):
-			is_climbing = true
-			climb_normal = ray.get_collision_normal()
+			if not is_climbing:
+				is_climbing = true
+				climb_normal = ray.get_collision_normal()
+			
+			if climb_normal != Vector3.ZERO:
+		# Changed minus (-) to plus (+) to look into the wall face
+				var target_look = global_position + climb_normal
+				look_at(Vector3(target_look.x, global_position.y, target_look.z), Vector3.UP)
 			ray.target_position.y = -0.2
-
 			truss_timer = 0.0
 			truss_used = false
-
 		else:
 			is_climbing = false
 			climb_normal = Vector3.ZERO
 			ray.target_position.y = -0.1
 	else:
 		is_climbing = false
-		climb_normal = Vector3.ZERO
 
 	# gravity
 	if not is_on_floor() and not is_climbing:
@@ -193,37 +233,38 @@ func _physics_process(delta: float) -> void:
 	else:
 		coyote_timer = max(coyote_timer - delta, 0.0)
 
-
+	# Regular jumping from ground
 	if Input.is_action_pressed("ui_accept"):
-		print(coyote_timer)
 		if coyote_timer > 0 and not is_climbing and jump_lock <= 0.0:
 			velocity.y = JUMP_VELOCITY
 			coyote_timer = 0
-
-
+			
+	if Input.is_action_pressed("Reset"):
+		reset()
+		
 	if Input.is_action_just_pressed("ui_accept"):
 		if is_climbing:
-			velocity += climb_normal * jump_off_force + Vector3.UP * jump_up_force
+			var knockback_dir = Vector3(climb_normal.x, 0, climb_normal.z).normalized()
+			
+			velocity.x = knockback_dir.x * jump_off_force * 2.0
+			velocity.z = knockback_dir.z * jump_off_force * 2.0
+			velocity.y = JUMP_VELOCITY * jump_up_force
+			
 			is_climbing = false
+			climb_normal = Vector3.ZERO
 			just_jumped_off = true
-
-			jump_lock = 0.1
+			
+			knockback_timer = 0.2
+			jump_lock = 0.125
 
 	if position.y <= -voidDepth:
 		reset()
 
-	# movement
 	var input_dir := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-
-	var cam_basis = cam.global_transform.basis
-	var forward = -cam_basis.z
-	var right = cam_basis.x
-
-	forward.y = 0
-	right.y = 0
-
-	forward = forward.normalized()
-	right = right.normalized()
+	
+	var cam_yaw = cam.yaw
+	var forward = Vector3(-sin(cam_yaw), 0, -cos(cam_yaw)).normalized()
+	var right = Vector3(cos(cam_yaw), 0, -sin(cam_yaw)).normalized()
 
 	var direction = (right * input_dir.x + forward * input_dir.y).normalized()
 
@@ -241,50 +282,39 @@ func _physics_process(delta: float) -> void:
 			velocity.y = 0
 			set_climb_anim(true, "Idle")
 
-	elif not just_jumped_off:
-		if direction != Vector3.ZERO:
-			velocity.x = direction.x * SPEED
-			velocity.z = direction.z * SPEED
-		else:
-			velocity.x = 0
-			velocity.z = 0
-
-# rotation
-	if is_climbing:
-		if GameManager.shiftlocked:
-			var cam_forward = -cam.global_transform.basis.z
-			cam_forward.y = 0
-			cam_forward = cam_forward.normalized()
-
-			if cam_forward.length() > 0.001:
-				rotation.y = atan2(cam_forward.x, cam_forward.z)
-		else:
-			pass 
-
 	else:
-		if GameManager.shiftlocked:
-			var cam_forward = -cam.global_transform.basis.z
-			cam_forward.y = 0
-			cam_forward = cam_forward.normalized()
-
-			if cam_forward.length() > 0.001:
-				rotation.y = atan2(cam_forward.x, cam_forward.z)
-
+		if knockback_timer > 0.0:
+			knockback_timer -= delta
+			
+			if direction != Vector3.ZERO:
+				velocity.x = lerp(velocity.x, direction.x * SPEED, 3.0 * delta)
+				velocity.z = lerp(velocity.z, direction.z * SPEED, 3.0 * delta)
+			else:
+				velocity.x = lerp(velocity.x, 0.0, 2.0 * delta)
+				velocity.z = lerp(velocity.z, 0.0, 2.0 * delta)
 		else:
-			if direction.length() > 0.001:
-				var target_angle = atan2(direction.x, direction.z)
-				rotation.y = lerp_angle(rotation.y, target_angle, 10 * delta)
+			if direction != Vector3.ZERO:
+				velocity.x = direction.x * SPEED
+				velocity.z = direction.z * SPEED
+			else:
+				velocity.x = 0
+				velocity.z = 0
+	if rotation_locked:
+		rotation.y = cam.yaw + PI
+	else:
+		if direction.length() > 0.001 and not is_climbing:
+			var target_angle = atan2(-direction.x, -direction.z)
+			var stable_delta = min(delta, 0.1)
+			rotation.y = lerp_angle(rotation.y, target_angle + PI, 10.0 * stable_delta)
 
 	move_and_slide()
 	update_state()
 	update_anim()
 	just_jumped_off = false
 
-
 func _process(delta: float) -> void:
 	if Health <= 0:
 		reset()
-
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body.is_in_group("kills"):

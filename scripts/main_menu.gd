@@ -4,20 +4,30 @@ extends Node2D
 @onready var Settings:Node2D = $Settings
 @onready var cam:Camera2D = $Camera2D
 var button = preload("res://assets/prefabs/UI/LevelCard.tscn")
-
+@onready var descLabel = $Desc/Label
 @onready var list = $Main/Panel/ScrollContainer/VBoxContainer
 
 func _ready():
 	var levels = load_all_levels()
 	for i in levels:
 		var level = load_level(i)
+		
+		if not level or typeof(level) != TYPE_DICTIONARY:
+			push_warning("Level data at index " + str(i) + " is invalid.")
+			continue
+
+		var obby_name = level.get("ObbyName", "Undefined Level")
+		var difficulty = level.get("Difficulty", "Unknown")
+		var creator = level.get("Creator", "Unknown Creator")
+
 		var buttonthing = button.instantiate()
-		buttonthing.text = level.ObbyName
+		buttonthing.text = obby_name
 		list.add_child(buttonthing)
+		
 		buttonthing.pressed.connect(func():
 			GameManager.currentLevel = i
-			print(GameManager.currentLevel)
-			)
+			descLabel.text = "Selected: %s\nTier: %s\nBy: %s" % [obby_name, difficulty, creator]
+		)
 
 func _on_play_pressed() -> void:
 	get_tree().change_scene_to_file("res://custom.tscn")

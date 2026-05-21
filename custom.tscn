@@ -41,7 +41,7 @@ offset_bottom = 36.0
 [node name="Timer" parent="." unique_id=1938707771 instance=ExtResource("12_fgt82")]
 mouse_filter = 2
 
-[node name="Player" parent="." unique_id=1574667455 node_paths=PackedStringArray("shiftlockLogo", "HealthBar", "spawn") instance=ExtResource("13_ye4bg")]
+[node name="Player" parent="." unique_id=1574667455 node_paths=PackedStringArray("shiftlockLogo", "timer", "HealthBar") instance=ExtResource("13_ye4bg")]
 shiftlockLogo = NodePath("../ShiftlockIcon")
+timer = NodePath("../Timer")
 HealthBar = NodePath("../Health")
-spawn = NodePath("")

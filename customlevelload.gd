@@ -1,6 +1,7 @@
 extends Node3D
 
 @onready var part = preload("res://assets/prefabs/building/Old/Part.tscn")
+@onready var truss = preload("res://assets/prefabs/building/Old/Truss.tscn")
 @onready var player = $Player
 
 var spawn_point: Node3D = null
@@ -33,32 +34,71 @@ func to_color(d):
 	return Color(d.get("R", 1), d.get("G", 1), d.get("B", 1))
 
 
-func addPart(pos, rot, size, classname):
+func addPart(pos, rot_deg, size, classname, color):
 	var newpart = part.instantiate()
 	add_child(newpart)
 
-	var mesh = newpart.get_node("MeshInstance3D")
+	var mesh = newpart.get_node("MeshInstance3D") as MeshInstance3D
 	var coll = newpart.get_node("CollisionShape3D")
 
+
 	newpart.position = pos
-	newpart.rotation = rot
+	
+
+	var rot_rad = Vector3(
+		deg_to_rad(rot_deg.x),
+		deg_to_rad(rot_deg.y),
+		deg_to_rad(rot_deg.z)
+	)
+	newpart.transform.basis = Basis.from_euler(rot_rad, EULER_ORDER_ZXY)
+
 
 	if coll.shape:
-		coll.shape = coll.shape.duplicate() # <--- Crucial step
+		coll.shape = coll.shape.duplicate() 
 		var shape = coll.shape as BoxShape3D
 		if shape:
 			shape.size = size
 
 
 	if mesh.mesh:
-		mesh.mesh = mesh.mesh.duplicate() # <--- Crucial step
+		mesh.mesh = mesh.mesh.duplicate()
 		var box_mesh = mesh.mesh as BoxMesh
 		if box_mesh:
 			box_mesh.size = size
+			
+		if mesh.mesh.material:
+			mesh.mesh.material = mesh.mesh.material.duplicate()
+			mesh.mesh.material.set_shader_parameter("base_color", color)
 
 	if classname == "Spawn":
 		print("Spawn found at:", pos)
 		spawn_point = newpart
+
+
+func addTruss(pos, rot_deg, size, classname):
+	var newtruss = truss.instantiate()
+	add_child(newtruss)
+
+	var mesh = newtruss.get_node("Truss/trusss")
+	var coll = newtruss.get_node("Truss/CollisionShape3D")
+
+
+	newtruss.position = pos
+	
+
+	var rot_rad = Vector3(
+		deg_to_rad(rot_deg.x),
+		deg_to_rad(rot_deg.y),
+		deg_to_rad(rot_deg.z)
+	)
+	newtruss.transform.basis = Basis.from_euler(rot_rad, EULER_ORDER_ZXY)
+
+ 
+	if coll.shape:
+		coll.shape = coll.shape.duplicate()
+		var shape = coll.shape as BoxShape3D
+		if shape:
+			shape.size = size
 
 func spawn_node(node_data):
 	var classname = node_data.get("ClassName", "")
@@ -69,7 +109,8 @@ func spawn_node(node_data):
 			to_vec3(p.get("Position")),
 			to_vec3(p.get("Rotation")),
 			to_vec3(p.get("Size")),
-			"Part"
+			"Part",
+			to_color(p.get("Color"))
 		)
 
 	elif classname == "Spawn":
@@ -78,7 +119,16 @@ func spawn_node(node_data):
 			to_vec3(p.get("Position")),
 			to_vec3(p.get("Rotation")),
 			to_vec3(p.get("Size")),
-			"Spawn"
+			"Spawn",
+			to_color(p.get("Color"))
+		)
+	elif classname == "Truss":
+		var p = node_data.get("Properties", {})
+		addTruss(
+			to_vec3(p.get("Position")),
+			to_vec3(p.get("Rotation")),
+			to_vec3(p.get("Size")),
+			"Truss"
 		)
 
 	for child in node_data.get("Children", []):
@@ -90,8 +140,12 @@ func loadstuff(data):
 	spawn_point = null
 
 	print("Loading level...")
-
-	for child in data.get("Children", []):
+	var main_folder = data.get("Data")
+	if main_folder == null:
+		print("ERROR: Missing 'Data' key inside JSON!")
+		return
+	var parts_list = main_folder.get("Children", [])
+	for child in parts_list:
 		spawn_node(child)
 
 	print("Level loaded. Spawn =", spawn_point)

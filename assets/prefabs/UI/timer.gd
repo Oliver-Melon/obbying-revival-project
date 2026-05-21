@@ -6,6 +6,11 @@ var minutes := 0
 
 @onready var label = $Label
 
+func resetTime():
+	milliseconds = 0
+	seconds = 0
+	minutes = 0
+
 func _physics_process(delta: float) -> void:
 	milliseconds += int(delta * 1000)
 
