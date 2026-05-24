@@ -9,9 +9,6 @@ signal CharacterAdded(Player)
 @export var shiftlocked:bool = false
 @export var alljump:bool = false
 const TARGETRATIO = 16.0/9.0
-var windowedMode = Window.MODE_WINDOWED
-var exclusiveFullscreenMode = Window.MODE_EXCLUSIVE_FULLSCREEN
-var notificationWmCloseRequest = NOTIFICATION_WM_CLOSE_REQUEST
 
 func _input(event):
 	if event is InputEventKey and event.pressed:
@@ -19,10 +16,14 @@ func _input(event):
 			toggle_fullscreen()
 
 func toggle_fullscreen():
-	if window.mode == windowedMode:
-		window.mode = exclusiveFullscreenMode
+	if window.mode == Window.MODE_WINDOWED:
+		window.mode = Window.MODE_FULLSCREEN # take a wild guess on what this does
+		print("fullscreen")
 	else:
-		window.mode = windowedMode
+		window.mode = Window.MODE_WINDOWED
+		print("no fullscreen")
+
+# fullscreen (not) copyrighted by Tob Odin Odin and (not) only allowed in ORP usage.
 
 func copy_default_levels():
 	var source_dir = DirAccess.open("res://mainlevels")
@@ -63,36 +64,40 @@ func copy_default_levels():
 
 	source_dir.list_dir_end()
 
-func ensure_levels_folder():
+func ensure_levels_folder(): # makes sure that levels exists lol
 	var dir = DirAccess.open("user://")
 	if not dir.dir_exists("levels"):
 		dir.make_dir("levels")
 
 func _ready():
+	# Window + Mouse Setup
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-	get_window().mode = windowedMode
+	get_window().mode = Window.MODE_WINDOWED
 	ensure_levels_folder()
 	copy_default_levels()
 
+	# Loading playerdata
 	if FileAccess.file_exists("user://data.tres"):
 		data = ResourceLoader.load("user://data.tres")
 	else:
 		data = PlayerData.new()
 		ResourceSaver.save(data,"user://data.tres")
-	DataLoaded.emit()
+	DataLoaded.emit() # Telling game its done loading
 	
+	# Fps handling thing
 	data.MaxFPSChanged.connect(func(new):
 		Engine.max_fps = int(new)
 		pass)
 	Engine.max_fps = int(data.maxFPS)
 	
+	# Yep
 	CharacterAdded.connect(func(new):
 		var rand = get_tree().get_nodes_in_group("SpawnLocation").pick_random()
 		new.global_position = rand.global_position + Vector3(0,1,0)
 		pass)
 	
 func _notification(what: int) -> void:
-	if what == notificationWmCloseRequest:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		if !OS.is_restart_on_exit_set():
 			data.rendering = "d312"
 			ResourceSaver.save(data,"user://data.tres")
