@@ -9,6 +9,21 @@ signal CharacterAdded(Player)
 @export var shiftlocked:bool = false
 @export var alljump:bool = false
 const TARGETRATIO = 16.0/9.0
+var windowedMode = Window.MODE_WINDOWED
+var exclusiveFullscreenMode = Window.MODE_EXCLUSIVE_FULLSCREEN
+var notificationWmCloseRequest = NOTIFICATION_WM_CLOSE_REQUEST
+
+func _input(event):
+	if event is InputEventKey and event.pressed:
+		if event.keycode == KEY_F11:
+			toggle_fullscreen()
+
+func toggle_fullscreen():
+	if window.mode == windowedMode:
+		window.mode = exclusiveFullscreenMode
+	else:
+		window.mode = windowedMode
+
 func copy_default_levels():
 	var source_dir = DirAccess.open("res://mainlevels")
 	if source_dir == null:
@@ -48,40 +63,36 @@ func copy_default_levels():
 
 	source_dir.list_dir_end()
 
-func ensure_levels_folder(): # makes sure that levels exists lol
+func ensure_levels_folder():
 	var dir = DirAccess.open("user://")
 	if not dir.dir_exists("levels"):
 		dir.make_dir("levels")
 
 func _ready():
-	# Window + Mouse Setup
 	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-	get_window().mode = Window.MODE_WINDOWED
+	get_window().mode = windowedMode
 	ensure_levels_folder()
 	copy_default_levels()
 
-	# Loading playerdata
 	if FileAccess.file_exists("user://data.tres"):
 		data = ResourceLoader.load("user://data.tres")
 	else:
 		data = PlayerData.new()
 		ResourceSaver.save(data,"user://data.tres")
-	DataLoaded.emit() # Telling game its done loading
+	DataLoaded.emit()
 	
-	# Fps handling thing
 	data.MaxFPSChanged.connect(func(new):
 		Engine.max_fps = int(new)
 		pass)
 	Engine.max_fps = int(data.maxFPS)
 	
-	# Yep
 	CharacterAdded.connect(func(new):
 		var rand = get_tree().get_nodes_in_group("SpawnLocation").pick_random()
 		new.global_position = rand.global_position + Vector3(0,1,0)
 		pass)
 	
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+	if what == notificationWmCloseRequest:
 		if !OS.is_restart_on_exit_set():
 			data.rendering = "d312"
 			ResourceSaver.save(data,"user://data.tres")
