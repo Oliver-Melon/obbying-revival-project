@@ -37,9 +37,9 @@ func addCheckpoint(pos: Vector3, rot: Vector3, vel: Vector3):
 		checkpoints.append(newcheckpoint)
 		spawn_point = newcheckpoint
 		
-		if player != null:
-			player.spawn = newcheckpoint
-			print("Player spawn successfully updated to checkpoint!")
+		if player == null: await GameManager.CharacterAdded
+		player.spawn = newcheckpoint
+		print("Player spawn successfully updated to checkpoint!")
 
 func removeCheckpoints():
 	for cp in checkpoints:
@@ -120,11 +120,11 @@ func addPart(pos, rot_deg, size, classname, color):
 		newpart.name = "Spawn"
 
 
-func addTruss(pos, rot_deg, size, classname):
+func addTruss(pos, rot_deg, size, _classname):
 	var newtruss = truss.instantiate()
 	add_child(newtruss)
 
-	var mesh = newtruss.get_node("Truss/trusss")
+	var _mesh = newtruss.get_node("Truss/trusss")
 	var coll = newtruss.get_node("Truss/CollisionShape3D")
 	newtruss.position = pos
 	var rot_rad = Vector3(
@@ -173,7 +173,7 @@ func spawn_node(node_data):
 	for child in node_data.get("Children", []):
 		spawn_node(child)
 
-func _input(event: InputEvent) -> void:
+func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("addCheckpoint"):
 		addCheckpoint(player.position, player.rotation, player.velocity)
 	if Input.is_action_just_pressed("removeCheckpoint"):
@@ -186,7 +186,7 @@ func loadstuff(data):
 	print("Loading level...")
 	var main_folder = data.get("Data")
 	if main_folder == null:
-		print("ERROR: Missing 'Data' key inside JSON!")
+		push_error("Missing 'Data' key inside JSON!")
 		return
 	var parts_list = main_folder.get("Children", [])
 	for child in parts_list:
@@ -209,4 +209,4 @@ func _ready() -> void:
 		player.spawn = spawn_point
 		player.reset()
 	else:
-		print("WARNING: NO SPAWN FOUND IN LEVEL")
+		push_warning("NO SPAWN FOUND IN LEVEL")
