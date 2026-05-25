@@ -8,6 +8,7 @@ signal CharacterAdded(Player)
 @export var Camera:CamStuff
 @export var shiftlocked:bool = false
 @export var alljump:bool = false
+@export var RPC:bool = true
 const TARGETRATIO = 16.0/9.0
 
 func _input(event):

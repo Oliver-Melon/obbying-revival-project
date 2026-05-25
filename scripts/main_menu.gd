@@ -12,6 +12,10 @@ func _ready():
 	get_window().files_dropped.connect(_file_dragged)
 	load_all_levels()
 
+	if DiscordRPCManager != null:
+		DiscordRPCManager.menu()
+
+
 func _file_dragged(files:PackedStringArray):
 	for x in files:
 		if x.ends_with(".json"):
@@ -30,14 +34,26 @@ func _file_dragged(files:PackedStringArray):
 			print("file not json durr")
 	pass
 
+
 func _on_play_pressed() -> void:
 	get_tree().change_scene_to_file("res://custom.tscn")
+	
+	if DiscordRPCManager != null:
+		DiscordRPCManager.playing(GameManager.currentLevel)
+
 
 func _on_settings_pressed() -> void:
 	cam.global_position = Settings.global_position
+	
+	if DiscordRPCManager != null:
+		DiscordRPCManager.settings()
+
 
 func _on_return_to_main_pressed() -> void:
 	cam.global_position = Main.global_position
+	
+	if DiscordRPCManager != null:
+		DiscordRPCManager.menu()
 
 
 func load_level(path):
@@ -53,10 +69,13 @@ func load_level(path):
 	var data = json.data
 	return data
 
+
 func load_all_levels():
 	for x in list.get_children():
 		x.call_deferred("queue_free")
+
 	var levels = fetch_levels()
+
 	for i in levels:
 		var level = load_level(i)
 		
@@ -77,6 +96,7 @@ func load_all_levels():
 			title.text = "Selected: %s" % [obby_name]
 			desc.text = "Tier: %s\nBy: %s" % [difficulty, creator]
 		)
+
 
 func fetch_levels():
 	var levels = []

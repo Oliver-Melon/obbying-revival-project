@@ -22,6 +22,8 @@ config/show_image=true
 
 GameManager="*uid://cte5656lvloub"
 Mouse="*uid://cu25jxjffbj0w"
+DiscordRPCManager="*uid://dhduneqga1y8e"
+DiscordRPCLoader="*uid://qnxs07vgnacx"
 
 [display]
 
@@ -32,6 +34,10 @@ window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/vsync/vsync_mode=0
 mouse_cursor/custom_image_hotspot=Vector2(0.04, 0)
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/discord-rpc-gd/plugin.cfg")
 
 [file_customization]
 
