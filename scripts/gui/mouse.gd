@@ -31,9 +31,11 @@ func _process(_delta: float) -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 	if GameManager.shiftlocked or is_first_person:
+		if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+			last_pos = mouse_pos # this fixes mouse bugging out after unshiftlock
+
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		global_position = get_viewport_rect().size / 2
-		last_pos = Vector2.ONE/2
 	elif !rotating:
 		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 			Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
