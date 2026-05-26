@@ -19,6 +19,7 @@ func _ready() -> void:
 	update_part_color("right_leg", GameManager.data.body_colors.get("right_leg", Color.WHITE))
 	
 func update_part_color(part_name: String, new_color: Color) -> void:
+	await ready
 	var target_mesh: MeshInstance3D = null
 	
 	match part_name:
@@ -30,8 +31,13 @@ func update_part_color(part_name: String, new_color: Color) -> void:
 		"right_leg": target_mesh = right_leg_mesh
 		
 	if not target_mesh: return
-	
-	# Override to setup new colors
-	var mat = StandardMaterial3D.new()
-	mat.albedo_color = new_color
-	target_mesh.material_override = mat
+	var count = target_mesh.get_surface_override_material_count()
+	for x in range(count):
+		var mat:Material = target_mesh.get_surface_override_material(x)
+		if mat == null:
+			mat = target_mesh.mesh.surface_get_material(x)
+		if mat:
+			var new_mat = mat.duplicate()
+			if new_mat is StandardMaterial3D or new_mat is ORMMaterial3D:
+				new_mat.albedo_color = new_color # Turn it red
+			target_mesh.set_surface_override_material(x, new_mat)

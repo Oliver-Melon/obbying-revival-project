@@ -1,8 +1,8 @@
 extends CharacterBody3D
 
 # walkspeed and jump height
-const SPEED = 14
-const JUMP_VELOCITY = 45
+var SPEED = 16
+var JUMP_VELOCITY = 50
 
 # coyote time shi
 @export var coyote_time := 0.125
@@ -75,19 +75,22 @@ func _apply_transparency_recursive(node: Node, alpha: float):
 		var material = node.material_override
 		if not material or not (material is StandardMaterial3D):
 			if node.get_active_material(0) is StandardMaterial3D:
+				print("material active")
 				material = node.get_active_material(0).duplicate()
 			else:
 				material = StandardMaterial3D.new()
+				
 			
 			node.material_override = material
 		
-		if alpha >= 1.0:
-			material.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
-		else:
-			material.transparency = BaseMaterial3D.Transparency.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
+		if material:
+			material.albedo_color.a = alpha
+			if alpha >= 1.0:
+				material.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+			else:
+				material.transparency = BaseMaterial3D.Transparency.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
 		
-		material.albedo_color.a = alpha
-	
+			
 	for child in node.get_children():
 		_apply_transparency_recursive(child, alpha)
 

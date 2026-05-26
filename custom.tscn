@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ct0p00aubml1x"]
 
 [ext_resource type="Texture2D" uid="uid://n57bufw4xuqm" path="res://assets/skyboxes/citrus_orchard_road_puresky_4k.exr" id="1_esb7u"]
-[ext_resource type="Script" uid="uid://b07seoxhluvhp" path="res://customlevelload.gd" id="1_o3jt7"]
+[ext_resource type="Script" uid="uid://b07seoxhluvhp" path="res://scripts/CustomLevelLoader.gd" id="1_o3jt7"]
 [ext_resource type="PackedScene" uid="uid://b35nds8m0c77l" path="res://assets/prefabs/UI/shiftlockIcon.tscn" id="2_o1hpr"]
 [ext_resource type="PackedScene" uid="uid://21fflrxp85y2" path="res://assets/prefabs/UI/Health.tscn" id="3_j68um"]
 [ext_resource type="PackedScene" uid="uid://bhgjl8nsom23c" path="res://assets/prefabs/UI/fps.tscn" id="4_wj2ro"]
@@ -17,6 +17,7 @@ sky_material = SubResource("PanoramaSkyMaterial_0b4ue")
 
 [sub_resource type="Environment" id="Environment_1ainy"]
 background_mode = 2
+background_energy_multiplier = 0.6
 sky = SubResource("Sky_f2txt")
 
 [node name="Node3D" type="Node3D" unique_id=489380727]

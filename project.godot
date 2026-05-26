@@ -187,7 +187,7 @@ WOBBLE={
 common/physics_ticks_per_second=240
 3d/physics_engine="Jolt Physics"
 jolt_physics_3d/collisions/collision_margin_fraction=0.18245
-3d/default_gravity=170.0
+3d/default_gravity=196.2
 
 [rendering]
 

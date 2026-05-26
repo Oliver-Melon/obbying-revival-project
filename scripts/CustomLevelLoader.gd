@@ -1,7 +1,7 @@
 extends Node3D
 
-@onready var part = preload("res://assets/prefabs/building/Old/Part.tscn")
-@onready var truss = preload("res://assets/prefabs/building/Old/Truss.tscn")
+@onready var part = preload("res://assets/prefabs/building/Parts/Part.tscn")
+@onready var truss = preload("res://assets/prefabs/building/Parts/Truss.tscn")
 @onready var player = $Player
 
 
@@ -102,7 +102,7 @@ func addPart(pos, rot_deg, size, classname, color):
 		deg_to_rad(rot_deg.y),
 		deg_to_rad(rot_deg.z)
 	)
-	newpart.transform.basis = Basis.from_euler(rot_rad, EULER_ORDER_ZXY)
+	newpart.transform.basis = Basis.from_euler(rot_rad, EULER_ORDER_XYZ)
 	if coll.shape:
 		coll.shape = coll.shape.duplicate() 
 		var shape = coll.shape as BoxShape3D
@@ -136,7 +136,7 @@ func addTruss(pos, rot_deg, size, _classname):
 		deg_to_rad(rot_deg.y),
 		deg_to_rad(rot_deg.z)
 	)
-	newtruss.transform.basis = Basis.from_euler(rot_rad, EULER_ORDER_ZXY)
+	newtruss.transform.basis = Basis.from_euler(rot_rad, EULER_ORDER_XYZ)
 	if coll.shape:
 		coll.shape = coll.shape.duplicate()
 		var shape = coll.shape as BoxShape3D
