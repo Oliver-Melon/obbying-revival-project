@@ -46,9 +46,14 @@ var just_jumped_off := false
 @onready var flickRayLeft = $flickRay4
 @onready var cam: CamStuff = $Camera3D
 @onready var ray = $RayCast3D
+@onready var topray = $RayCast3D2
 @onready var brickCollision = $Area3D
 @onready var player = $Character
 @onready var playerAnims = $Character/AnimationPlayer
+
+# test variables to fix truss climbing
+var climb_grace := 0.0
+var last_truss_point := Vector3.ZERO
 
 @export var timer: Control
 @export var HealthBar: ProgressBar
@@ -209,24 +214,47 @@ func _physics_process(delta: float) -> void:
 			Health += regen_rate * delta
 			Health = min(Health, MaxHealth)
 			update_health_bar()
+	
+	# truss logic
+	if jump_lock <= 0.0:
+		var touching_truss := false
 
-	if ray.is_colliding() and jump_lock <= 0.0:
-		var collider = ray.get_collider()
+		var active_ray = null
 
-		if collider.is_in_group("climbable"):
-			if not is_climbing:
-				is_climbing = true
-				climb_normal = ray.get_collision_normal()
-			
-			ray.target_position.y = -1.0
-			truss_timer = 0.0
-			truss_used = false
+		if ray.is_colliding():
+			active_ray = ray
+		elif topray.is_colliding():
+			active_ray = topray
+
+		if active_ray:
+			var collider = active_ray.get_collider()
+			# this should be changed to work with parts later
+			if collider and collider.is_in_group("climbable"):
+				touching_truss = true
+
+				climb_normal = active_ray.get_collision_normal()
+				last_truss_point = active_ray.get_collision_point()
+
+				climb_grace = 0.08
+
+				truss_timer = 0.0
+				truss_used = false
+
+		if touching_truss:
+			is_climbing = true
+
 		else:
-			is_climbing = false
-			climb_normal = Vector3.ZERO
-			ray.target_position.y = -0.5
-	else:
-		is_climbing = false
+			climb_grace -= delta
+
+			var dist = global_position.distance_to(last_truss_point)
+
+			if climb_grace > 0.0 and dist < 0.45:
+				is_climbing = true
+			else:
+				is_climbing = false
+				climb_normal = Vector3.ZERO
+				
+
 	# gravity
 	if not is_on_floor() and not is_climbing:
 		velocity += get_gravity() * delta
@@ -250,7 +278,10 @@ func _physics_process(delta: float) -> void:
 			velocity.y = JUMP_VELOCITY
 			coyote_timer = 0
 			
-	if Input.is_action_pressed("Reset"):
+	if Input.is_action_just_pressed("Reset") and !GameManager.RToggle:
+		reset()
+
+	if Input.is_action_just_pressed("ResetAlt") and GameManager.RToggle:
 		reset()
 		
 	if Input.is_action_just_pressed("ui_accept"):
@@ -281,6 +312,13 @@ func _physics_process(delta: float) -> void:
 	var direction = (right * input_dir.x + forward * input_dir.y).normalized()
 
 	if is_climbing:
+		velocity -= climb_normal * 6.0 * delta # attaching player to truss
+		
+		# leave truss when feet touch ground
+		if is_on_floor() and velocity.y <= 0:
+			is_climbing = false
+			climb_grace = 0.0
+	
 		var at_top := true
 		if climb_normal != Vector3.ZERO:
 			var space_state = get_world_3d().direct_space_state
@@ -302,16 +340,30 @@ func _physics_process(delta: float) -> void:
 		else:
 			velocity.x = 0
 			velocity.z = 0
+			
+		# dynamic climbing based on camera
+		var camf = -cam.global_transform.basis.z.normalized()
+		var camr = cam.global_transform.basis.x.normalized()
+		var charf = -global_transform.basis.z.normalized()
 
-		if Input.is_action_pressed("ui_up"):
-			velocity.y = -climb_speed
-			set_climb_anim(false, "Up")
-		elif Input.is_action_pressed("ui_down"):
-			velocity.y = climb_speed
-			set_climb_anim(false, "Down")
-		else:
-			velocity.y = 0
-			set_climb_anim(true, "Idle")
+		var vf = camf.dot(charf)
+		var vr = camr.dot(charf)
+
+		var v_input = Input.get_axis("ui_down", "ui_up")
+		var h_input = Input.get_axis("ui_left", "ui_right")
+
+		var climb_input = (v_input * vf) - (h_input * vr)
+
+		if abs(climb_input) > 0.01:
+			climb_input = sign(climb_input)
+
+		velocity.y = climb_input * climb_speed
+
+		set_climb_anim(
+			climb_input == 0,
+			"Up" if climb_input > 0 else "Down" if climb_input < 0 else "Idle"
+		)
+			
 	else:
 		if knockback_timer > 0.0:
 			knockback_timer -= delta
