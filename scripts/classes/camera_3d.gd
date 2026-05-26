@@ -5,7 +5,7 @@ class_name CamStuff
 @export var distance := 10.0
 @export var max_distance := 20.0
 @export var zoom_speed := 2.0
-@export var smooth_speed := 10
+@export var smooth_speed := 40
 
 var snapping := false
 const step := PI / 4.0
@@ -21,7 +21,6 @@ enum CameraMode {NORMAL, FIRSTPERSON, GHOST_MODE}
 var target_distance := 10.0 :
 	set(new):
 		target_distance = clamp(new, 0.0, max_distance)
-		
 		if target_distance <= 0.0:
 			mode = CameraMode.FIRSTPERSON
 		elif target_distance < 2.0:
@@ -37,6 +36,8 @@ func _ready():
 	GameManager.data.FOVChanged.connect(func(new):
 		fov = new
 	)
+
+# whoever reads this please add camera shader caching it lags so hard on first zoom
 
 func _input(event):
 	if Input.is_action_just_pressed("left_align"):
@@ -77,8 +78,15 @@ func _process(delta):
 	var look_basis = Basis.from_euler(Vector3(pitch, yaw, 0))
 	global_transform.basis = look_basis
 	var target_focus_pos = target.get_node("Focus").global_position
-	var max_desired_pos = target_focus_pos + look_basis.z * target_distance
 	
+	var side_offset = Vector3.ZERO
+	if GameManager.shiftlocked and mode == CameraMode.NORMAL:
+		side_offset = look_basis.x * 1.75
+		
+	var shifted_focus = target_focus_pos + side_offset
+	var max_desired_pos = shifted_focus + look_basis.z * target_distance
+	
+	ray.global_position = shifted_focus
 	ray.target_position = ray.to_local(max_desired_pos)
 	ray.force_raycast_update()
 	
@@ -86,17 +94,21 @@ func _process(delta):
 	if ray.is_colliding():
 		var origin = ray.global_position
 		var hit = ray.get_collision_point()
-		final_distance = origin.distance_to(hit) - 0.1
+		final_distance = origin.distance_to(hit) - 0.2
 	
-	distance = min(lerp(distance, target_distance, smooth_speed * delta), final_distance)
-	
-	var side_offset = Vector3.ZERO
-	
-	if GameManager.shiftlocked and mode == CameraMode.NORMAL:
-		side_offset = look_basis.x * 1.75
+	var calculated_target = min(target_distance, final_distance)
+	if calculated_target < distance:
+		distance = calculated_target
+	else:
+		distance = lerp(distance, calculated_target, smooth_speed * delta)
+
+	if distance < 0.05:
+		distance = 0.0
 		
-	global_position = target_focus_pos + (look_basis.z * distance) + side_offset
+	global_position = shifted_focus + (look_basis.z * distance)
 	
+	auto_transparency()
+		
 func sync_angles(target_transform: Transform3D):
 	var euler = target_transform.basis.get_euler()
 	
@@ -107,3 +119,22 @@ func sync_angles(target_transform: Transform3D):
 		self.distance = 0
 	
 	global_transform = target_transform
+
+# this function separate for auto transparencing player if part is blocking camera
+
+func auto_transparency():
+	if target == null:
+		return
+		
+	var target_transparency := 0.0
+	
+	if distance < 2.0:
+		target_transparency = remap(distance, 0.5, 2.0, 1.0, 0.0)
+		target_transparency = clamp(target_transparency, 0.0, 1.0)
+		
+	if mode == CameraMode.FIRSTPERSON:
+		target_transparency = 1.0
+
+	for child in target.find_children("*", "MeshInstance3D", true, false):
+		if child is MeshInstance3D:
+			child.transparency = target_transparency
