@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://ctlrovtarcx8" path="res://assets/images/UI/refresh.png" id="6_2nypq"]
 [ext_resource type="PackedScene" uid="uid://bll3e5wwm6qpo" path="res://assets/prefabs/UI/FOV.tscn" id="6_826wr"]
 [ext_resource type="PackedScene" uid="uid://b5gciitoxxw3j" path="res://assets/prefabs/UI/maxFPS.tscn" id="7_ucygd"]
-[ext_resource type="PackedScene" uid="uid://buyvpgvyi0uoh" path="res://assets/prefabs/UI/alljumpToggle.tscn" id="8_mipys"]
+[ext_resource type="PackedScene" uid="uid://buyvpgvyi0uoh" path="res://assets/prefabs/UI/practiceToggle.tscn" id="8_mipys"]
 [ext_resource type="Script" uid="uid://ywm0qwb34xhy" path="res://scripts/gui/renderer_switcher.gd" id="11_ptake"]
 [ext_resource type="PackedScene" uid="uid://duj8uanvn1sqi" path="res://assets/prefabs/models/character.tscn" id="12_bky6r"]
 [ext_resource type="PackedScene" uid="uid://dy2sb60hk1gd2" path="res://assets/prefabs/UI/RPCToggle.tscn" id="14_5faoh"]
@@ -367,11 +367,12 @@ initial_position = 2
 size = Vector2i(300, 150)
 dialog_text = "Restart to apply changes"
 
-[node name="AlljumpToggle" parent="." unique_id=118282012 instance=ExtResource("8_mipys")]
+[node name="PracticeToggle" parent="." unique_id=118282012 instance=ExtResource("8_mipys")]
 offset_left = 1057.0
 offset_top = 52.0
 offset_right = 1165.0
 offset_bottom = 91.0
+text = "Practice"
 
 [node name="AvatarCustom" type="Node2D" parent="." unique_id=1786122237]
 position = Vector2(2539, 0)
