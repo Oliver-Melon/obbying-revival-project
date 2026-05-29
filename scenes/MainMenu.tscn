@@ -312,7 +312,7 @@ offset_top = -361.0
 offset_right = 562.0
 offset_bottom = 260.0
 theme_override_font_sizes/font_size = 32
-text = "In-Game FaQ
+text = "In-Game FAQ
 
 Q: How do I add custom levels?
 A: Just drag the .json file into the menu!
