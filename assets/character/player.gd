@@ -32,8 +32,8 @@ var took_damage := false
 @export var sensitivity := 0.005
 @export var climb_speed := 10.0
 @export var stick_force := 2.0
-@export var jump_off_force := 19.0 # Jump up and jump off forces updated for roblox parity
-@export var TRUSS_BOUNCE_JUMP = 38
+@export var jump_off_force := 18.45 # Jump up and jump off forces updated for roblox parity
+@export var TRUSS_BOUNCE_JUMP := 33.1
 
 var knockback_timer := 0.0
 var step_visual_offset := 0.0
@@ -390,21 +390,21 @@ func _physics_process(delta: float) -> void:
 			
 			# Truss momentum logic
 			
-			# Jump off down horiz 44
-			# Jump off neutral horiz 38
-			# Jump off up horiz 32
+			# Jump off down horiz 42.5
+			# Jump off neutral horiz 36.9
+			# Jump off up horiz 31.2
 			
-			velocity.x = knockback_dir.x * jump_off_force * (2.0 - 0.31*climb_input) # If climbing UP: 1.69 (nice)
+			velocity.x = knockback_dir.x * jump_off_force * (2.0 - 0.305*climb_input) # If climbing UP: 1.69 (nice)
 			
-			velocity.z = knockback_dir.z * jump_off_force * (2.0 - 0.31*climb_input) # If climbing DOWN: 2.31
+			velocity.z = knockback_dir.z * jump_off_force * (2.0 - 0.305*climb_input) # If climbing DOWN: 2.31
 
 			# Jump up force should be 0.72
 			
-			# Jump off down vert 29
-			# Jump off neutral vert 36
-			# Jump off up vert 40
+			# Jump off down vert 27.5
+			# Jump off neutral vert 33.1
+			# Jump off up vert 44.9
 
-			velocity.y = TRUSS_BOUNCE_JUMP * (1 + 0.15*climb_input) # UP: 1.15 DOWN: 0.85; NEUTRAL: 1
+			velocity.y = TRUSS_BOUNCE_JUMP * (0.09*pow(climb_input, 2.0) + 0.26*climb_input + 1) # UP: 1.35 DOWN: 0.83; NEUTRAL: 1
 			
 			is_climbing = false
 			climb_normal = Vector3.ZERO
