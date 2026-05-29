@@ -316,23 +316,6 @@ func _physics_process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("ResetAlt") and GameManager.RToggle:
 		reset()
-		
-	if Input.is_action_just_pressed("ui_accept"):
-		# truss bouncing
-		if is_climbing:
-			var backward_dir = global_transform.basis.z
-			var knockback_dir = Vector3(-backward_dir.x, 0, -backward_dir.z).normalized()
-			
-			velocity.x = knockback_dir.x * jump_off_force * 2.0
-			velocity.z = knockback_dir.z * jump_off_force * 2.0
-			velocity.y = JUMP_VELOCITY * jump_up_force
-			
-			is_climbing = false
-			climb_normal = Vector3.ZERO
-			just_jumped_off = true
-			
-			knockback_timer = 0.2
-			jump_lock = 0.125
 
 	if position.y <= -voidDepth:
 		reset()
@@ -398,7 +381,27 @@ func _physics_process(delta: float) -> void:
 			# so technically this fixes gliding hopefully
 			velocity.x = 0
 			velocity.z = 0
+		
+		if Input.is_action_pressed("ui_accept") and knockback_timer <= 0:
+			# truss bouncing
+			var backward_dir = global_transform.basis.z
+			var knockback_dir = Vector3(-backward_dir.x, 0, -backward_dir.z).normalized()
 			
+			# Truss momentum logic
+			
+			velocity.x = knockback_dir.x * jump_off_force * (2.0 - climb_input/2) # If climbing UP: 2 - 1/2
+			velocity.z = knockback_dir.z * jump_off_force * (2.0 - climb_input/2) # If climbing DOWN: 2 + 1/2
+
+			velocity.y = JUMP_VELOCITY * ((0.1*climb_input) + jump_up_force) # UP: 0.1 + 1.1; DOWN: 0.1 - 1.1; NEUTRAL: 1.1
+			# (0.1*climb_input)-0.1 could be implemented instead but im assuming you want default jump off force to be 1.1
+			
+			is_climbing = false
+			climb_normal = Vector3.ZERO
+			just_jumped_off = true
+			
+			knockback_timer = 0.2
+			jump_lock = 0.125
+		
 		set_climb_anim(
 			climb_input == 0,
 			"Up" if climb_input > 0 else "Down" if climb_input < 0 else "Idle"
