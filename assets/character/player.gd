@@ -32,8 +32,9 @@ var took_damage := false
 @export var sensitivity := 0.005
 @export var climb_speed := 10.0
 @export var stick_force := 2.0
-@export var jump_off_force := 15.0 
-@export var jump_up_force := 1.1
+@export var jump_off_force := 19.0 # Jump up and jump off forces updated for roblox parity
+@export var TRUSS_BOUNCE_JUMP = 38
+
 var knockback_timer := 0.0
 var step_visual_offset := 0.0
 
@@ -389,11 +390,21 @@ func _physics_process(delta: float) -> void:
 			
 			# Truss momentum logic
 			
-			velocity.x = knockback_dir.x * jump_off_force * (2.0 - climb_input/2) # If climbing UP: 2 - 1/2
-			velocity.z = knockback_dir.z * jump_off_force * (2.0 - climb_input/2) # If climbing DOWN: 2 + 1/2
+			# Jump off down horiz 44
+			# Jump off neutral horiz 38
+			# Jump off up horiz 32
+			
+			velocity.x = knockback_dir.x * jump_off_force * (2.0 - 0.31*climb_input) # If climbing UP: 1.69 (nice)
+			
+			velocity.z = knockback_dir.z * jump_off_force * (2.0 - 0.31*climb_input) # If climbing DOWN: 2.31
 
-			velocity.y = JUMP_VELOCITY * ((0.1*climb_input) + jump_up_force) # UP: 0.1 + 1.1; DOWN: 0.1 - 1.1; NEUTRAL: 1.1
-			# (0.1*climb_input)-0.1 could be implemented instead but im assuming you want default jump off force to be 1.1
+			# Jump up force should be 0.72
+			
+			# Jump off down vert 29
+			# Jump off neutral vert 36
+			# Jump off up vert 40
+
+			velocity.y = TRUSS_BOUNCE_JUMP * (1 + 0.15*climb_input) # UP: 1.15 DOWN: 0.85; NEUTRAL: 1
 			
 			is_climbing = false
 			climb_normal = Vector3.ZERO
