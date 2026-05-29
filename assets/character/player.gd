@@ -287,7 +287,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("Reset") and !GameManager.RToggle:
 		reset()
 
-	if Input.is_action_just_pressed("ResetAlt") and !GameManager.RToggle:
+	if Input.is_action_just_pressed("ResetAlt") and GameManager.RToggle:
 		reset()
 		
 	if Input.is_action_just_pressed("ui_accept"):
