@@ -5,6 +5,7 @@ extends Node2D
 @onready var Main:Node2D = $Main
 @onready var Settings:Node2D = $Settings
 @onready var AvatarCustom:Node2D = $AvatarCustom
+@onready var Help:Node2D = $Help
 @onready var cam:Camera2D = $Camera2D
 var button = preload("res://assets/prefabs/UI/LevelCard.tscn")
 @onready var title = $Main/Desc/Label
@@ -54,10 +55,12 @@ func _file_dragged(files:PackedStringArray):
 	pass
 
 func _on_play_pressed() -> void: # when you press play
-	get_tree().change_scene_to_file("res://custom.tscn")
-	
-	if DiscordRPCManager != null:
-		DiscordRPCManager.playing(GameManager.currentLevel)
+	if GameManager.currentLevel != "":
+		get_tree().change_scene_to_file("res://custom.tscn")
+		
+		if DiscordRPCManager != null:
+			DiscordRPCManager.playing(GameManager.currentLevel)
+
 
 func load_level(path): # loads level data and returns it
 	var file = FileAccess.open(path,FileAccess.READ)
@@ -140,3 +143,7 @@ func _on_return_to_settings_pressed() -> void:
 
 func _on_avatar_pressed() -> void:
 	cam.global_position = AvatarCustom.global_position
+
+
+func _on_help_pressed() -> void:
+	cam.global_position = Help.global_position
