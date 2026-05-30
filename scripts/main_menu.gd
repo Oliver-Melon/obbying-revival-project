@@ -94,6 +94,9 @@ func select_level(path: String, obby_name, difficulty, creator):
 
 ## Loads all levels in the folder and then adds it to the level list
 func load_all_levels():
+	
+	orig.clear()
+	sorted.clear()
 	for x in list.get_children():
 		x.call_deferred("queue_free")
 
@@ -114,8 +117,9 @@ func load_all_levels():
 		buttonthing.text = obby_name
 		list.add_child(buttonthing)
 		
-		buttonthing.pressed.connect(select_level)
-		
+		buttonthing.pressed.connect(func():
+			select_level(i, obby_name, difficulty, creator)
+		)
 	orig = list.get_children()
 	sorted = orig.duplicate()
 
@@ -182,16 +186,33 @@ func _input(event: InputEvent) -> void:
 
 
 # Searching
-func sort_levels():
+func sort_levels():	
 	if searchTerm != "":
+		orig = list.get_children()
+		sorted = orig.duplicate()
+		
 		sorted.sort_custom(
 			func(a: Button, b: Button): 
-				return a.text.similarity(searchTerm) > b.text.similarity(searchTerm)
+				var is_a = searchTerm.to_lower() in a.text.to_lower()
+				var is_b = searchTerm.to_lower() in b.text.to_lower()
+				
+				if is_a != is_b:
+					return is_a
+				
+				return a.text.to_lower().similarity(searchTerm.to_lower()) > b.text.to_lower().similarity(searchTerm.to_lower())
 		)
+		
+		orig.sort_custom(
+			func(a: Button, b: Button):
+				return a.text.to_lower() < b.text.to_lower()
+		)
+		
 		for item: Button in orig:
 			list.move_child(item, sorted.find(item))
 
 	else:
+		
+		
 		for item: Button in orig:
 			list.move_child(item, orig.find(item))
 
