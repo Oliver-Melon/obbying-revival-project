@@ -343,18 +343,37 @@ func addTruss(pos, rot_deg, size, _classname):
 	var basis_ = Basis.from_euler(Vector3(deg_to_rad(rot_deg.x), deg_to_rad(rot_deg.y), deg_to_rad(rot_deg.z)), EULER_ORDER_XYZ)
 	var seg_h : float = 2.0 
 	
-	for i in range(floor(size.y / seg_h)):
+	var max_length: float = size.y
+	var local_axis: Vector3 = Vector3.UP
+	
+	if size.x > size.y && size.x > size.z:
+		max_length = size.x
+		local_axis = Vector3.RIGHT
+	elif size.z > size.y && size.z > size.x:
+		max_length = size.z
+		local_axis = Vector3.FORWARD
+
+	var num_segments: int = floor(max_length / seg_h)
+	for i in range(num_segments):
 		var newtruss = truss.instantiate()
 		add_child(newtruss)
+		
 		var seg_coll = newtruss.get_node_or_null("Truss/CollisionShape3D")
 		if seg_coll: seg_coll.queue_free()
 		
-		var local_offset = Vector3(0, -size.y / 2.0 + (i * seg_h) + (seg_h / 2.0), 0)
+		var offset_scalar = -max_length / 2.0 + (i * seg_h) + (seg_h / 2.0)
+		var local_offset = local_axis * offset_scalar
+		
 		newtruss.position = pos + (basis_ * local_offset)
 		newtruss.transform.basis = basis_
 		
 		var mesh_node = newtruss.get_node_or_null("Truss/trusss")
-		if mesh_node: mesh_node.scale = Vector3.ONE
+		if mesh_node: 
+			mesh_node.scale = Vector3.ONE
+			if local_axis == Vector3.RIGHT:
+				mesh_node.rotation_degrees = Vector3(0, 0, -90) 
+			elif local_axis == Vector3.FORWARD:
+				mesh_node.rotation_degrees = Vector3(90, 0, 0)
 
 	var physical_collider = StaticBody3D.new()
 	var collision_shape = CollisionShape3D.new()
