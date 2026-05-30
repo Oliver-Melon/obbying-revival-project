@@ -563,10 +563,10 @@ offset_right = 904.0
 offset_bottom = 134.0
 
 [node name="SearchBar" type="LineEdit" parent="." unique_id=179523255]
-offset_left = -474.0
-offset_top = -20.0
-offset_right = -51.0
-offset_bottom = 15.0
+offset_left = -639.0
+offset_top = -420.0
+offset_right = -216.0
+offset_bottom = -385.0
 placeholder_text = "search bar do not delete (not supposed to be shown!)"
 context_menu_enabled = false
 emoji_menu_enabled = false

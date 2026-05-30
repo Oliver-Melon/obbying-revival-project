@@ -145,6 +145,8 @@ func search_for_string_that_contains(str: String, arr: Array):
 	for item: String in arr:
 		if item.contains(str):
 			return item
+	print("Couldn't be found")
+	return arr[0]
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
