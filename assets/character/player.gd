@@ -239,6 +239,7 @@ func _physics_process(delta: float) -> void:
 			update_health_bar()
 	
 	# truss logic
+	# truss logic
 	if jump_lock <= 0.0:
 		var touching_truss := false
 		var active_ray = null
@@ -270,6 +271,19 @@ func _physics_process(delta: float) -> void:
 					climb_grace = 0.08
 					truss_timer = 0.0
 					truss_used = false
+
+		if not touching_truss and is_climbing:
+			for i in range(get_slide_collision_count()):
+				var collision = get_slide_collision(i)
+				var collider = collision.get_collider()
+				if collider and collider.is_in_group("climbable"):
+					touching_truss = true
+					climb_normal = collision.get_normal()
+					last_truss_point = collision.get_position()
+					climb_grace = 0.08
+					truss_timer = 0.0
+					truss_used = false
+					break
 
 		if touching_truss:
 			is_climbing = true
