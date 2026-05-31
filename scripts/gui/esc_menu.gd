@@ -29,7 +29,8 @@ func toggle_paused():
 	R/Ctrl + R - Reset to Spawn
 
 	Shift + P - Toggle on/off freecam
-	1 - Toggle on/off noclip"""
+	1 - Toggle on/off noclip
+	Q/E - Change speed of Noclip"""
 
 	else:
 		$ControlText.text += "\nR/Ctrl + R - Reset to Spawn"

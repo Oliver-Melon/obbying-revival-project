@@ -57,6 +57,7 @@ var just_jumped_off := false
 # truss rays
 
 @onready var ray = $TrussRay
+@onready var ray2 = $TrussRay2
 @onready var topray = $GlideRay
 @onready var glidetop = $GlideTop
 @onready var glidebottom = $GlideBottom
@@ -240,17 +241,17 @@ func _physics_process(delta: float) -> void:
 	# truss logic
 	if jump_lock <= 0.0:
 		var touching_truss := false
-
 		var active_ray = null
 
 		if ray.is_colliding():
 			active_ray = ray
+		elif ray2.is_colliding():
+			active_ray = ray2
 		elif topray.is_colliding():
 			active_ray = topray
 
 		if active_ray:
 			var collider = active_ray.get_collider()
-			# this should be changed to work with parts later
 			if collider and collider.is_in_group("climbable"):
 				var normal = active_ray.get_collision_normal()
 				

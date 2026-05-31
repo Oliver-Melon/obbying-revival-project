@@ -24,6 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://dy2sb60hk1gd2" path="res://assets/prefabs/UI/toggles/RPCToggle.tscn" id="14_5faoh"]
 [ext_resource type="PackedScene" uid="uid://lmy5axxbv241" path="res://assets/prefabs/UI/toggles/RToggle.tscn" id="14_ptake"]
 [ext_resource type="Script" uid="uid://24mab5chvxqt" path="res://scripts/gui/stud_switcher.gd" id="20_hm0al"]
+[ext_resource type="Theme" uid="uid://xrauqfunapst" path="res://assets/prefabs/themes/main.tres" id="20_i7r3k"]
 [ext_resource type="PackedScene" uid="uid://tlywd3fwrydm" path="res://assets/prefabs/UI/toggles/nfToggle.tscn" id="23_2axsc"]
 [ext_resource type="Script" uid="uid://dxu5nchp1ofpk" path="res://scripts/gui/toggles/NF_toggle.gd" id="24_wrgne"]
 
@@ -133,41 +134,6 @@ func _process(delta: float) -> void:
 	var mat = material as ShaderMaterial
 	mat.set_shader_parameter(\"elapsed_time\",elapsed_time)
 "
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yovvs"]
-bg_color = Color(0, 0, 0, 0)
-border_color = Color(0, 0, 0, 1)
-corner_detail = 20
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wrgne"]
-bg_color = Color(0, 0, 0, 0)
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-corner_detail = 20
-expand_margin_left = 8.0
-expand_margin_top = 32.0
-expand_margin_right = 8.0
-expand_margin_bottom = 7.0
-shadow_size = 6
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2axsc"]
-bg_color = Color(0, 0, 0, 1)
-border_width_left = 5
-border_width_top = 8
-border_width_right = 5
-border_width_bottom = 15
-border_color = Color(0, 0, 0, 1)
-border_blend = true
-corner_detail = 20
-
-[sub_resource type="Theme" id="Theme_yovvs"]
-AcceptDialog/styles/embedded_border = SubResource("StyleBoxFlat_yovvs")
-AcceptDialog/styles/embedded_unfocused_border = SubResource("StyleBoxFlat_wrgne")
-AcceptDialog/styles/panel = SubResource("StyleBoxFlat_2axsc")
 
 [node name="MainMenu" type="Node2D" unique_id=361961899 node_paths=PackedStringArray("menu_avatar", "body_parts")]
 position = Vector2(-27, 103)
@@ -485,7 +451,7 @@ transient_to_focused = true
 exclusive = false
 unresizable = true
 unfocusable = true
-theme = SubResource("Theme_yovvs")
+theme = ExtResource("20_i7r3k")
 ok_button_text = "Restart Now"
 dialog_text = "Changing the renderer requires a restart to take effect"
 dialog_autowrap = true
