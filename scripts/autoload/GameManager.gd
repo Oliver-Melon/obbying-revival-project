@@ -16,6 +16,7 @@ const TARGETRATIO = 16.0/9.0
 signal DataLoaded
 signal CharacterAdded(Player)
 signal VersionLoaded
+signal sliders_enabled_changed(enabled: bool)
 
 var version_latest:String   #  This is the latest version from github - danki
 var version:String = ProjectSettings.get_setting("application/config/version")       #  The current version - danki
@@ -130,3 +131,6 @@ func ensure_levels_folder(): # makes sure that levels exists lol
 	var dir = DirAccess.open("user://")
 	if not dir.dir_exists("levels"):
 		dir.make_dir("levels")
+
+func set_sliders_enabled(enabled: bool) -> void:
+	sliders_enabled_changed.emit(enabled)
