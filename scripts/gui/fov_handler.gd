@@ -8,7 +8,7 @@ func _ready():
 	self.value = GameManager.data.fov
 	old_text = str(self.value)
 	_on_value_text_changed(old_text)
-	GameManager.sliders_enabled_changed.conect(_on_sliders_enabled_changed)
+	GameManager.sliders_enabled_changed.connect(_on_sliders_enabled_changed)
 	pass
 
 func _on_value_text_changed(new_text: String) -> void:
@@ -33,7 +33,7 @@ func _on_value_changed(n: float) -> void:
 func _on_sliders_enabled_changed(enabled: bool) -> void:
 	is_sliders_enabled = enabled
 	if enabled:
-		mosue_filter = Control.MOUSE_FILTER_STOP
+		mouse_filter = Control.MOUSE_FILTER_STOP
 	else:
-		Control.MOUSE_FILTER_IGNORE
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
 	editable = enabled
