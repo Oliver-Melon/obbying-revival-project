@@ -349,7 +349,7 @@ func addBall(pos, rot_deg, size, color):
 			texture(mesh, color, mesh.mesh.material)
 
 
-func addTruss(pos, rot_deg, size, _classname):
+func addTruss(pos, rot_deg, size, color):
 	var basis_ = Basis.from_euler(Vector3(deg_to_rad(rot_deg.x), deg_to_rad(rot_deg.y), deg_to_rad(rot_deg.z)), EULER_ORDER_XYZ)
 	var seg_h : float = 2.0 
 	
@@ -385,6 +385,11 @@ func addTruss(pos, rot_deg, size, _classname):
 			elif local_axis == Vector3.FORWARD:
 				mesh_node.rotation_degrees = Vector3(90, 0, 0)
 
+			if mesh_node.material_override:
+				var truss_mesh = mesh_node.material_override.duplicate() as ShaderMaterial
+				truss_mesh.set_shader_parameter("base_color", color)
+				mesh_node.material_override = truss_mesh
+
 	var physical_collider = StaticBody3D.new()
 	var collision_shape = CollisionShape3D.new()
 	var box_shape = BoxShape3D.new()
@@ -405,7 +410,6 @@ func spawn_node(node_data):
 
 	if classname == "Part":
 		var p = node_data.get("Properties", {})
-		# main repo note: modify the exporter so it stores the shape of the object
 		var shape = node_data.get("Shape", "Block")
 
 		if shape == "Cylinder":
@@ -460,7 +464,7 @@ func spawn_node(node_data):
 			to_vec3(p.get("Position")),
 			to_vec3(p.get("Rotation")),
 			to_vec3(p.get("Size")),
-			"Truss"
+			to_color(p.get("Color"))
 		)
 
 	for child in node_data.get("Children", []):
