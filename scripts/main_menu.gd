@@ -16,6 +16,7 @@ var button = preload("res://assets/prefabs/UI/LevelCard.tscn")
 @onready var orig: Array
 @onready var sorted: Array
 var searchTerm = ""
+var current_page: String = "main"
 
 @export var menu_avatar: CharacterAvatarMesh
 @export var body_parts: Dictionary[ColorPickerButton, String]
@@ -219,25 +220,34 @@ func sort_levels():
 # -- Switching between "pages" -- #
 
 func _on_settings_pressed() -> void: # when you press settings it makes your camera go to the settings area
+	current_page = "settings"
+	GameManager.set_sliders_enabled(true)
 	cam.global_position = Settings.global_position
 	
 	if DiscordRPCManager != null:
 		DiscordRPCManager.settings() # discordrpc settings thingy
 
 func _on_return_to_main_pressed() -> void:
+	current_page = "main"
+	GameManager.set_sliders_enabled(false)
 	cam.global_position = Main.global_position
 	
 	if DiscordRPCManager != null:
 		DiscordRPCManager.menu()
 
 func _on_return_to_settings_pressed() -> void:
+	current_page = "settings"
+	GameManager.set_sliders_enabled(true)
 	cam.global_position = Settings.global_position
 
 func _on_avatar_pressed() -> void:
+	current_page = "avatar"
+	GameManager.set_sliders_enabled(false)
 	cam.global_position = AvatarCustom.global_position
 
-
 func _on_help_pressed() -> void:
+	current_page = "help"
+	GameManager.set_sliders_enabled(false)
 	cam.global_position = Help.global_position
 
 
