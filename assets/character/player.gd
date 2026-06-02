@@ -593,15 +593,13 @@ func _handle_step_up(step_displacement: Vector3, hit_info: KinematicCollision3D)
 			var drop_dist = ground_hit.get_travel().y
 			var final_step_height = step_height + drop_dist
 			
-			if final_step_height > 0.01:
+			if final_step_height > 0.01 and velocity.y <= 0:
 				global_position.y += final_step_height
 				step_visual_offset -= final_step_height
 				
 				if player:
 					player.position.y -= final_step_height
-					
-				velocity.y -= get_gravity().length() * final_step_height / max(abs(velocity.y), 0.001)
-					
+				
 				force_update_transform()
 
 func _process(_delta: float) -> void:
