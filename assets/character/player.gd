@@ -599,8 +599,8 @@ func _handle_step_up(step_displacement: Vector3, hit_info: KinematicCollision3D)
 				
 				if player:
 					player.position.y -= final_step_height
-					var gravity22 = get_gravity()
-					velocity.y = velocity_after_step(velocity.y, gravity22.length(), final_step_height)
+					
+				velocity.y -= get_gravity().length() * final_step_height / max(abs(velocity.y), 0.001)
 					
 				force_update_transform()
 
