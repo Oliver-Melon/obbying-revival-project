@@ -511,6 +511,12 @@ func _physics_process(delta: float) -> void:
 	update_anim()
 	just_jumped_off = false
 	
+func velocity_after_step(v_initial: float, gravity: float, step_height: float) -> float:
+	var discriminant = v_initial * v_initial - 2.0 * gravity * step_height
+	if discriminant < 0.0:
+		return 0.0
+	return sqrt(discriminant)
+	
 func _step_climbing() -> void:
 	if is_climbing:
 		return
@@ -523,16 +529,14 @@ func _step_climbing() -> void:
 	var step_displacement = horizontal_vel * dt
 	var hit_info = KinematicCollision3D.new()
 
-	# This works on ground
+
 	if test_move(global_transform, step_displacement, hit_info):
 		_handle_step_up(step_displacement, hit_info)
-	# NEW: Add detection for airborne stepping
 	elif not is_on_floor():
-		# Cast ahead to detect obstacles while airborne
 		var space_state = get_world_3d().direct_space_state
 		var query = PhysicsShapeQueryParameters3D.new()
 		var shape = BoxShape3D.new()
-		shape.size = Vector3(0.4, 2.4, 0.2)  # Match your collision shape size
+		shape.size = Vector3(0.4, 2.4, 0.2)
 		query.shape = shape
 		query.transform = global_transform.translated(step_displacement)
 		
@@ -540,8 +544,7 @@ func _step_climbing() -> void:
 		if results.size() > 0:
 			hit_info = KinematicCollision3D.new()
 			_handle_step_up(step_displacement, hit_info)
-	
-	# Step down only on ground
+			
 	if is_on_floor():
 		var forward_tgt = global_transform.translated(step_displacement)
 		var max_possible_step_down := 2.0
@@ -596,6 +599,8 @@ func _handle_step_up(step_displacement: Vector3, hit_info: KinematicCollision3D)
 				
 				if player:
 					player.position.y -= final_step_height
+					var gravity22 = get_gravity()
+					velocity.y = velocity_after_step(velocity.y, gravity22.length(), final_step_height)
 					
 				force_update_transform()
 
